@@ -24,8 +24,11 @@ COPY . .
 # Cria diretório para certificados
 RUN mkdir -p certificados
 
+# Cria script de inicialização
+RUN echo '#!/bin/bash\npython railway_init.py && exec streamlit run app_nfse_enhanced.py --server.port ${PORT:-8501} --server.address 0.0.0.0 --server.headless true' > /app/start.sh && chmod +x /app/start.sh
+
 # Expõe a porta (Railway define PORT automaticamente)
 EXPOSE 8501
 
-# Comando de inicialização
-CMD python railway_init.py && streamlit run app_nfse_enhanced.py --server.port $PORT --server.address 0.0.0.0 --server.headless true
+# Comando de inicialização (formato JSON)
+ENTRYPOINT ["/bin/bash", "/app/start.sh"]
