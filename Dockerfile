@@ -22,13 +22,11 @@ RUN pip install --no-cache-dir --upgrade pip && \
 # Copia o resto do código
 COPY . .
 
-# Cria diretório para certificados, converte line endings e ajusta permissões
-RUN mkdir -p certificados && \
-    dos2unix start.sh && \
-    chmod +x start.sh
+# Cria diretório para certificados
+RUN mkdir -p certificados
 
 # Expõe a porta (Railway define PORT automaticamente)
 EXPOSE 8501
 
-# Comando de inicialização
-ENTRYPOINT ["/bin/bash", "start.sh"]
+# Comando de inicialização - usa Python para evitar problemas de CRLF
+ENTRYPOINT ["python", "railway_start.py"]
